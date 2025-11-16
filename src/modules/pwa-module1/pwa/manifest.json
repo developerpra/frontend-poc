@@ -1,0 +1,12 @@
+{
+  "name": "Orders PWA",
+  "short_name": "Orders",
+  "start_url": "/orders",
+  "display": "standalone",
+  "icons": [
+    {
+      "src": "/modules/pwa-orders/pwa/icon.png",
+      "sizes": "192x192"
+    }
+  ]
+}
