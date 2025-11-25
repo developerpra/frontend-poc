@@ -51,7 +51,7 @@ export default function Information() {
         </div>
 
         {open1 && (
-          <div className="p-4 ">
+          <div className="p-4 grid grid-cols-4 gap-4">
             <Input label="Vessel Name" />
             <DropDownList label="Vessel Type" data={["Barge", "Tow", "Ship"]} />
             <Input label="IMO Number" />
@@ -93,7 +93,7 @@ export default function Information() {
         </div>
 
         {open2 && (
-          <div className="p-4 ">
+          <div className="p-4 grid-cols-4 gap-4 grid">
             <Input label="Beam" />
             <Input label="Draught" />
             <Input label="Vessel Line Capacity" />
