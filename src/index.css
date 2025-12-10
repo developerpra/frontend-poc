@@ -93,7 +93,16 @@ input,
 .k-button {
   @apply h-9;
 }
-
+.k-dropdownlist.k-picker,
+.k-input {
+  @apply mt-1;
+}
+.k-dialog {
+  @apply rounded-lg;
+}
+.k-dialog-titlebar {
+  @apply bg-primary text-white rounded-t-lg;
+}
 .k-animation-container {
   @apply w-full;
 }

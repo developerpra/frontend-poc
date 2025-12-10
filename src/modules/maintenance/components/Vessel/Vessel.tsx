@@ -4,7 +4,7 @@ import {
   DropDownListChangeEvent,
 } from "@progress/kendo-react-dropdowns";
 import { faLocationDot } from "@fortawesome/free-solid-svg-icons";
-import { Input } from "@progress/kendo-react-inputs";
+import { Checkbox, Input } from "@progress/kendo-react-inputs";
 import { Button, ButtonGroup } from "@progress/kendo-react-buttons";
 import { Grid, GridCellProps, GridColumn } from "@progress/kendo-react-grid";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -17,6 +17,14 @@ const vesselNames = ["EBL-2869", "EBL-2900", "EBL - 2971 & 2972"];
 const ActionCell = (_props: GridCellProps) => (
   <td>
     <div className="flex items-center justify-center gap-3 text-lg">
+      <button
+        type="button"
+        title="Edit"
+        className="text-primary cursor-pointer"
+      >
+        <FontAwesomeIcon icon={faLocationDot} className="text-primary" />
+      </button>
+
       <button
         type="button"
         title="Edit"
@@ -38,7 +46,6 @@ const ActionCell = (_props: GridCellProps) => (
 const BranchCell = (props: GridCellProps) => {
   return (
     <td className="flex items-center gap-2 px-2">
-      <FontAwesomeIcon icon={faLocationDot} className="text-primary" />
       <a
         href={`/branch/${props.dataItem.branch}`}
         className="text-primary underline hover:text-blue-800"
@@ -116,7 +123,7 @@ export default function VesselPage() {
   return (
     <>
       {/* Filters Card */}
-      <div className="border border-gray-300 rounded-lg p-4 bg-white space-y-4">
+      <div className="border border-gray-300 rounded-lg p-4 my-6">
         <h3 className="font-bold text-gray-700">Filters</h3>
 
         <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
@@ -150,7 +157,12 @@ export default function VesselPage() {
             value={filters?.imo}
             onChange={(e) => setFilters({ ...filters, imo: e.value ?? "" })}
           />
-          <div className="space-y-1">
+          <div className="space-y-1 relative">
+            <div className="flex absolute right-1">
+              <Checkbox defaultChecked={true} size={"small"} />
+              <label className="ml-2 mt-0.5">Active</label>
+            </div>
+
             <label className="font-medium">Branch</label>
             <DropDownList
               className=" !bg-transparent"
@@ -163,23 +175,16 @@ export default function VesselPage() {
           </div>
 
           {/* Status */}
-          <div className="md:mt-5 w-fit h-fit">
+          <div className="w-fit h-fit flex flex-col">
+            <label htmlFor="" className="font-medium mb-1">
+              Vessel Status
+            </label>
             <ButtonGroup>
-              <Button
-                className="w-16"
-                onClick={() => setStatus("Active")}
-                themeColor="primary"
-                fillMode={status === "Active" ? "solid" : "outline"}
-              >
+              <Button togglable={true} className="w-16">
                 Active
               </Button>
 
-              <Button
-                className="w-16"
-                onClick={() => setStatus("Inactive")}
-                themeColor="primary"
-                fillMode={status === "Inactive" ? "solid" : "outline"}
-              >
+              <Button togglable={true} className="w-16">
                 Inactive
               </Button>
             </ButtonGroup>
@@ -196,9 +201,9 @@ export default function VesselPage() {
       </div>
 
       {/* Table */}
-      <div className="border border-gray-300 rounded-lg bg-white mt-4 overflow-auto">
+      <div className="border border-gray-300 rounded-lg mt-4 overflow-auto">
         <Grid
-          className="w-screen"
+          className="w-[700px] md:w-screen"
           data={data?.slice(page.skip, page.skip + page.take)}
           skip={page?.skip}
           take={page?.take}

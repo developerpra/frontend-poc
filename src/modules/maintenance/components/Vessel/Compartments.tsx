@@ -139,21 +139,9 @@ export default function Compartments({
 
   return (
     <>
-      {/* SAVE/CANCEL */}
-      {mode === "edit" && (
-        <div className="flex justify-end gap-4">
-          <Button themeColor="primary" onClick={handleSave}>
-            <FontAwesomeIcon icon={faFile} className="mr-1" /> Save
-          </Button>
-          <Button onClick={handleCancel}>
-            <FontAwesomeIcon icon={faXmark} className="mr-1" /> Cancel
-          </Button>
-        </div>
-      )}
-
       {/* TOP FILTER SECTION */}
       {mode === "edit" && (
-        <div className="flex justify-between border border-gray-300 rounded-lg p-4 bg-white mt-4">
+        <div className="flex justify-between border border-gray-300 rounded-lg p-4 my-6">
           <div>
             <h3 className="font-bold text-gray-700">Compartment Type</h3>
             <ButtonGroup>
@@ -286,6 +274,18 @@ export default function Compartments({
           )}
         </Grid>
       </div>
+
+      {/* SAVE/CANCEL */}
+      {mode === "edit" && (
+        <div className="flex justify-end gap-4 my-6">
+          <Button themeColor="primary" onClick={handleSave}>
+            <FontAwesomeIcon icon={faFile} className="mr-1" /> Save
+          </Button>
+          <Button onClick={handleCancel}>
+            <FontAwesomeIcon icon={faXmark} className="mr-1" /> Cancel
+          </Button>
+        </div>
+      )}
     </>
   );
 }

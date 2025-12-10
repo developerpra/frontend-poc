@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import { Checkbox, Input } from "@progress/kendo-react-inputs";
 import { DropDownList } from "@progress/kendo-react-dropdowns";
 import { Button } from "@progress/kendo-react-buttons";
+import { DatePicker } from "@progress/kendo-react-dateinputs";
+import { Dialog, DialogActionsBar } from "@progress/kendo-react-dialogs";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCheck,
@@ -15,6 +17,7 @@ import {
 import { toast } from "sonner";
 import ReadonlyField from "@/shared/ui/ReadOnly";
 import { Grid, GridColumn } from "@progress/kendo-react-grid";
+import BranchAssignmentDialog from "@/shared/components/BranchSelector";
 
 type VesselOwner = {
   id: number;
@@ -55,6 +58,7 @@ export default function VesselInformation({
   const [open3, setOpen3] = useState(true);
 
   // Initialize form state from passed data (or defaults)
+  const [branchSelector, setBranchSelector] = useState(true);
   const [vesselName, setVesselName] = useState<string>(data?.vesselName ?? "");
   const [vesselType, setVesselType] = useState<string>(data?.vesselType ?? "");
   const [imo, setImo] = useState<string>(data?.imo ?? "");
@@ -90,6 +94,10 @@ export default function VesselInformation({
     ]
   );
   const [notes, setNotes] = useState<string>(data?.notes ?? "");
+
+  const toggleDialog = () => {
+    setBranchSelector(!branchSelector);
+  };
 
   // Keep local state in sync if parent data changes
   useEffect(() => {
@@ -206,7 +214,7 @@ export default function VesselInformation({
         </div>
 
         {open1 && (
-          <div className="p-4 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          <div className="p-4 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
             {mode === "edit" ? (
               <Input
                 label="Vessel Name"
@@ -260,6 +268,7 @@ export default function VesselInformation({
                   <div className="flex items-center gap-1">
                     <FontAwesomeIcon
                       icon={faLocationDot}
+                      onClick={toggleDialog}
                       className="text-primary"
                     />
                     <label className="text-sm font-medium">Branch</label>
@@ -385,7 +394,7 @@ export default function VesselInformation({
         </div>
 
         {open2 && (
-          <div className="p-4 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4  gap-4">
+          <div className="p-4 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5  gap-4">
             {mode === "edit" ? (
               <Input
                 label="Beam"
@@ -514,14 +523,10 @@ export default function VesselInformation({
             )}
 
             {mode === "edit" ? (
-              <Input
+              <DatePicker
+                placeholder="Choose a date..."
                 label="Build Year"
                 labelClassName="font-medium"
-                placeholder=" "
-                value={additional["buildYear"] ?? ""}
-                onChange={(e) =>
-                  setAdditional((p) => ({ ...p, buildYear: e.value }))
-                }
               />
             ) : (
               <ReadonlyField
@@ -532,7 +537,7 @@ export default function VesselInformation({
 
             {mode === "edit" ? (
               <Input
-                label="Last Sampling"
+                label="Last Strapping"
                 labelClassName="font-medium"
                 placeholder=" "
                 value={additional["lastSampling"] ?? ""}
@@ -542,7 +547,7 @@ export default function VesselInformation({
               />
             ) : (
               <ReadonlyField
-                label="Last Sampling"
+                label="Last Strapping"
                 value={additional["lastSampling"] ?? ""}
               />
             )}
@@ -809,6 +814,14 @@ export default function VesselInformation({
             Cancel
           </Button>
         </div>
+      )}
+
+      {/* Model */}
+      {branchSelector && (
+        <BranchAssignmentDialog
+          open={branchSelector}
+          onClose={() => setBranchSelector(false)}
+        />
       )}
     </>
   );

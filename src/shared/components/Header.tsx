@@ -51,8 +51,9 @@ export default function Header() {
       window.removeEventListener("resize", updateHeight);
     };
   }, []);
+
   const handleMobileSidebar = () => {
-    alert("done");
+    alert("under development");
   };
   return (
     <div ref={headerRef} className="sticky top-0 z-40 w-full shadow-md">
