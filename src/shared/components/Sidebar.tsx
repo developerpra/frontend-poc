@@ -1,66 +1,89 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faChevronLeft,
   faBars,
   faHome,
   faHammer,
+  faXmark,
 } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { RootState } from "../../app/store";
+import { closeMobileSidebar } from "../../app/store/uiSlice";
 
 export default function Sidebar() {
-  const [open, setOpen] = useState(false);
+  const dispatch = useDispatch();
+  const open = useSelector((state: RootState) => state.ui.isMobileSidebarOpen);
   const navigate = useNavigate();
   const headerOffset = "var(--app-header-height, 0px)";
 
   return (
-    <aside
-      className={`hidden sticky z-30 bg-gray-100 shadow-[3px_0_6px_rgba(0,0,0,0.15)]
-        transition-all duration-300 overflow-y-auto
-        ${open ? "w-40" : "w-16"}
-      `}
-      style={{
-        top: headerOffset,
-        height: `calc(100vh - ${headerOffset})`,
-      }}
-    >
-      {/* TOP — Toggle Button */}
-      <div className="flex items-center justify-center py-4 cursor-pointer">
-        {open ? (
-          <FontAwesomeIcon
-            icon={faChevronLeft}
-            onClick={() => setOpen(false)}
-            className="w-6 h-6 text-gray-700 hover:text-blue-600 transition"
-          />
-        ) : (
-          <FontAwesomeIcon
-            icon={faBars}
-            onClick={() => setOpen(true)}
-            className="w-6 h-6 text-gray-700 hover:text-blue-600 transition"
-          />
-        )}
-      </div>
+    <>
+      {/* MOBILE OVERLAY */}
+      {open && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
+          onClick={() => dispatch(closeMobileSidebar())}
+        />
+      )}
 
-      {/* MENU */}
-      <div
-        className={`mt-6 flex flex-col items-center gap-6 ${open ? "items-start px-4" : "items-center"}`}
+      {/* SIDEBAR CONTAINER */}
+      <aside
+        className={`fixed lg:sticky z-50 bg-gray-100 shadow-[3px_0_6px_rgba(0,0,0,0.15)]
+          transition-transform duration-300 overflow-y-auto
+          
+          /* Mobile styles: slide in/out, fixed width */
+          top-0 left-0 h-full w-64
+          ${open ? "translate-x-0" : "-translate-x-full"}
+
+          /* Desktop styles: always visible, sticky, specific top/height */
+          lg:translate-x-0 lg:w-16 lg:top-[var(--app-header-height,0px)]
+          lg:h-[calc(100vh-var(--app-header-height,0px))]
+        `}
       >
-        <button
-          className="flex items-center gap-4 text-gray-700 hover:text-blue-600"
-          onClick={() => navigate("/")}
-        >
-          <FontAwesomeIcon icon={faHome} className="w-6 h-6" />
-          {open && <span className="text-sm font-medium">Home</span>}
-        </button>
+        {/* MOBILE HEADER (Close Button) - Hidden on Desktop */}
+        <div className="flex justify-end p-4 lg:hidden">
+          <FontAwesomeIcon
+            icon={faXmark}
+            className="w-6 h-6 text-gray-700 cursor-pointer"
+            onClick={() => dispatch(closeMobileSidebar())}
+          />
+        </div>
 
-        <button
-          className="flex items-center gap-4 text-gray-700 hover:text-blue-600"
-          onClick={() => navigate("/Maintenance")}
-        >
-          <FontAwesomeIcon icon={faHammer} className="w-6 h-6" />
-          {open && <span className="text-sm font-medium">Maintenance</span>}
-        </button>
-      </div>
-    </aside>
+        {/* DESKTOP TOGGLE (Removed as requested: "Desktop version remains static") */}
+        {/* If you want a toggle on desktop, uncomment below, but user asked for static. */}
+        {/* 
+        <div className="hidden lg:flex items-center justify-center py-4 cursor-pointer">
+           <FontAwesomeIcon icon={faBars} ... />
+        </div> 
+        */}
+
+        {/* MENU ITEMS */}
+        <div className="flex flex-col items-center lg:items-center gap-6 mt-6 px-4 lg:px-0">
+          <button
+            className="flex items-center gap-4 text-gray-700 hover:text-blue-600 w-full lg:justify-center"
+            onClick={() => {
+              navigate("/");
+              dispatch(closeMobileSidebar());
+            }}
+          >
+            <FontAwesomeIcon icon={faHome} className="w-6 h-6 min-w-[24px]" />
+            <span className="text-sm font-medium lg:hidden">Home</span>
+          </button>
+
+          <button
+            className="flex items-center gap-4 text-gray-700 hover:text-blue-600 w-full lg:justify-center"
+            onClick={() => {
+              navigate("/Maintenance");
+              dispatch(closeMobileSidebar());
+            }}
+          >
+            <FontAwesomeIcon icon={faHammer} className="w-6 h-6 min-w-[24px]" />
+            <span className="text-sm font-medium lg:hidden">Maintenance</span>
+          </button>
+        </div>
+      </aside>
+    </>
   );
 }

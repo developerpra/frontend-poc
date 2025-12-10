@@ -9,7 +9,11 @@ import { useEffect, useRef } from "react";
 import { Input } from "@progress/kendo-react-inputs";
 import map from "lodash-es/map";
 
+import { useDispatch } from "react-redux";
+import { toggleMobileSidebar } from "../../app/store/uiSlice";
+
 export default function Header() {
+  const dispatch = useDispatch();
   const headerRef = useRef<HTMLDivElement | null>(null);
   const columns = [
     "SAV-3184",
@@ -53,16 +57,24 @@ export default function Header() {
   }, []);
 
   const handleMobileSidebar = () => {
-    alert("under development");
+    dispatch(toggleMobileSidebar());
   };
   return (
     <div ref={headerRef} className="sticky top-0 z-40 w-full shadow-md">
       <div className="bg-primary w-full text-white px-4 py-2 flex items-center gap-4">
-        <FontAwesomeIcon
+        {/* <FontAwesomeIcon
           onClick={handleMobileSidebar}
           icon={faBars}
-          className="cursor-pointer !lg:hidden"
-        />
+          className="cursor-pointer lg:hidden"
+        /> */}
+        
+        <div className="lg:hidden">
+          <FontAwesomeIcon
+            onClick={handleMobileSidebar}
+            icon={faBars}
+            className="cursor-pointer"
+          />
+        </div>
 
         <div className="font-bold text-lg tracking-wide">CAMIN</div>
 

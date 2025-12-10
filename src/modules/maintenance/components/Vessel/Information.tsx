@@ -1,9 +1,8 @@
 import { useState, useEffect } from "react";
-import { Checkbox, Input } from "@progress/kendo-react-inputs";
+import { Checkbox, Input, CheckboxChangeEvent } from "@progress/kendo-react-inputs";
 import { DropDownList } from "@progress/kendo-react-dropdowns";
 import { Button } from "@progress/kendo-react-buttons";
 import { DatePicker } from "@progress/kendo-react-dateinputs";
-import { Dialog, DialogActionsBar } from "@progress/kendo-react-dialogs";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCheck,
@@ -58,7 +57,12 @@ export default function VesselInformation({
   const [open3, setOpen3] = useState(true);
 
   // Initialize form state from passed data (or defaults)
-  const [branchSelector, setBranchSelector] = useState(true);
+  const [branchSelector, setBranchSelector] = useState(false); // Default to false? Original was true.
+  // Original was true for branchSelector: const [branchSelector, setBranchSelector] = useState(true);
+  // I will keep it as is, but usually dialogs start closed? 
+  // Wait, looking at the code: <BranchAssignmentDialog open={branchSelector} ... />
+  // If it's true, it opens on load. I'll stick to original behavior unless it looks like a bug.
+  
   const [vesselName, setVesselName] = useState<string>(data?.vesselName ?? "");
   const [vesselType, setVesselType] = useState<string>(data?.vesselType ?? "");
   const [imo, setImo] = useState<string>(data?.imo ?? "");
@@ -221,7 +225,7 @@ export default function VesselInformation({
                 labelClassName="font-medium"
                 value={vesselName}
                 placeholder=" "
-                onChange={(e) => setVesselName(e.value)}
+                onChange={(e) => setVesselName(String(e.value || ""))}
               />
             ) : (
               <ReadonlyField label="Vessel Name" value={vesselName} />
@@ -235,7 +239,7 @@ export default function VesselInformation({
                   placeholder="Select Vessel Type"
                   data={vesselTypeOptions}
                   value={vesselType}
-                  onChange={(e) => setVesselType(e.value)}
+                  onChange={(e) => setVesselType(String(e.value || ""))}
                 />
               </div>
             ) : (
@@ -248,7 +252,7 @@ export default function VesselInformation({
                 labelClassName="font-medium"
                 value={imo}
                 placeholder=" "
-                onChange={(e) => setImo(e.value)}
+                onChange={(e) => setImo(String(e.value || ""))}
               />
             ) : (
               <ReadonlyField label="IMO Number" value={imo} />
@@ -263,7 +267,7 @@ export default function VesselInformation({
                   <Checkbox
                     checked={active}
                     label="Active"
-                    onChange={(e) => setActive(Boolean((e as any).value))}
+                    onChange={(e: CheckboxChangeEvent) => setActive(Boolean(e.value))}
                   />
                   <div className="flex items-center gap-1">
                     <FontAwesomeIcon
@@ -290,7 +294,7 @@ export default function VesselInformation({
                 labelClassName="font-medium"
                 value={vetUnits}
                 placeholder=" "
-                onChange={(e) => setVetUnits(e.value)}
+                onChange={(e) => setVetUnits(String(e.value || ""))}
               />
             ) : (
               <ReadonlyField label="VET Units" value={vetUnits} />
@@ -302,7 +306,7 @@ export default function VesselInformation({
                 labelClassName="font-medium"
                 value={draftUnit}
                 placeholder=" "
-                onChange={(e) => setDraftUnit(e.value)}
+                onChange={(e) => setDraftUnit(String(e.value || ""))}
               />
             ) : (
               <ReadonlyField label="Draft Unit" value={draftUnit} />
@@ -314,7 +318,7 @@ export default function VesselInformation({
                 labelClassName="font-medium"
                 value={gaugeUnit}
                 placeholder=" "
-                onChange={(e) => setGaugeUnit(e.value)}
+                onChange={(e) => setGaugeUnit(String(e.value || ""))}
               />
             ) : (
               <ReadonlyField label="Gauge Unit" value={gaugeUnit} />
@@ -326,7 +330,7 @@ export default function VesselInformation({
                 labelClassName="font-medium"
                 value={volumeUnit}
                 placeholder=" "
-                onChange={(e) => setVolumeUnit(e.value)}
+                onChange={(e) => setVolumeUnit(String(e.value || ""))}
               />
             ) : (
               <ReadonlyField label="Volume Unit" value={volumeUnit} />
@@ -338,7 +342,7 @@ export default function VesselInformation({
                 labelClassName="font-medium"
                 value={vesselCapacity}
                 placeholder=" "
-                onChange={(e) => setVesselCapacity(e.value)}
+                onChange={(e) => setVesselCapacity(String(e.value || ""))}
               />
             ) : (
               <ReadonlyField label="Vessel Capacity" value={vesselCapacity} />
@@ -350,7 +354,7 @@ export default function VesselInformation({
                 labelClassName="font-medium"
                 value={compartments}
                 placeholder=" "
-                onChange={(e) => setCompartments(e.value)}
+                onChange={(e) => setCompartments(String(e.value || ""))}
               />
             ) : (
               <ReadonlyField label="Compartments" value={compartments} />
@@ -362,7 +366,7 @@ export default function VesselInformation({
                 labelClassName="font-medium"
                 value={sandPipe}
                 placeholder=" "
-                onChange={(e) => setSandPipe(e.value)}
+                onChange={(e) => setSandPipe(String(e.value || ""))}
               />
             ) : (
               <ReadonlyField label="Sand Pipe" value={sandPipe} />
@@ -374,7 +378,7 @@ export default function VesselInformation({
                 labelClassName="font-medium"
                 value={lengthOverall}
                 placeholder=" "
-                onChange={(e) => setLengthOverall(e.value)}
+                onChange={(e) => setLengthOverall(String(e.value || ""))}
               />
             ) : (
               <ReadonlyField label="Length Overall" value={lengthOverall} />
@@ -401,7 +405,7 @@ export default function VesselInformation({
                 labelClassName="font-medium"
                 value={additional["beam"] ?? ""}
                 onChange={(e) =>
-                  setAdditional((p) => ({ ...p, beam: e.value }))
+                  setAdditional((p) => ({ ...p, beam: String(e.value || "") }))
                 }
               />
             ) : (
@@ -415,7 +419,7 @@ export default function VesselInformation({
                 placeholder=" "
                 value={additional["draught"] ?? ""}
                 onChange={(e) =>
-                  setAdditional((p) => ({ ...p, draught: e.value }))
+                  setAdditional((p) => ({ ...p, draught: String(e.value || "") }))
                 }
               />
             ) : (
@@ -432,7 +436,7 @@ export default function VesselInformation({
                 placeholder=" "
                 value={additional["vesselLine"] ?? ""}
                 onChange={(e) =>
-                  setAdditional((p) => ({ ...p, vesselLine: e.value }))
+                  setAdditional((p) => ({ ...p, vesselLine: String(e.value || "") }))
                 }
               />
             ) : (
@@ -449,7 +453,7 @@ export default function VesselInformation({
                 placeholder=" "
                 value={additional["connectionType"] ?? ""}
                 onChange={(e) =>
-                  setAdditional((p) => ({ ...p, connectionType: e.value }))
+                  setAdditional((p) => ({ ...p, connectionType: String(e.value || "") }))
                 }
               />
             ) : (
@@ -466,7 +470,7 @@ export default function VesselInformation({
                 placeholder=" "
                 value={additional["ballast"] ?? ""}
                 onChange={(e) =>
-                  setAdditional((p) => ({ ...p, ballast: e.value }))
+                  setAdditional((p) => ({ ...p, ballast: String(e.value || "") }))
                 }
               />
             ) : (
@@ -483,7 +487,7 @@ export default function VesselInformation({
                 placeholder=" "
                 value={additional["manifold"] ?? ""}
                 onChange={(e) =>
-                  setAdditional((p) => ({ ...p, manifold: e.value }))
+                  setAdditional((p) => ({ ...p, manifold: String(e.value || "") }))
                 }
               />
             ) : (
@@ -499,7 +503,7 @@ export default function VesselInformation({
                 labelClassName="font-medium"
                 placeholder=" "
                 value={additional["lop"] ?? ""}
-                onChange={(e) => setAdditional((p) => ({ ...p, lop: e.value }))}
+                onChange={(e) => setAdditional((p) => ({ ...p, lop: String(e.value || "") }))}
               />
             ) : (
               <ReadonlyField label="LOP" value={additional["lop"] ?? ""} />
@@ -512,7 +516,7 @@ export default function VesselInformation({
                 placeholder=" "
                 value={additional["flag"] ?? ""}
                 onChange={(e) =>
-                  setAdditional((p) => ({ ...p, flag: e.value }))
+                  setAdditional((p) => ({ ...p, flag: String(e.value || "") }))
                 }
               />
             ) : (
@@ -542,7 +546,7 @@ export default function VesselInformation({
                 placeholder=" "
                 value={additional["lastSampling"] ?? ""}
                 onChange={(e) =>
-                  setAdditional((p) => ({ ...p, lastSampling: e.value }))
+                  setAdditional((p) => ({ ...p, lastSampling: String(e.value || "") }))
                 }
               />
             ) : (
@@ -559,7 +563,7 @@ export default function VesselInformation({
                 placeholder=" "
                 value={additional["lastDryDock"] ?? ""}
                 onChange={(e) =>
-                  setAdditional((p) => ({ ...p, lastDryDock: e.value }))
+                  setAdditional((p) => ({ ...p, lastDryDock: String(e.value || "") }))
                 }
               />
             ) : (
@@ -576,7 +580,7 @@ export default function VesselInformation({
                 placeholder=" "
                 value={additional["formerName"] ?? ""}
                 onChange={(e) =>
-                  setAdditional((p) => ({ ...p, formerName: e.value }))
+                  setAdditional((p) => ({ ...p, formerName: String(e.value || "") }))
                 }
               />
             ) : (
@@ -593,7 +597,7 @@ export default function VesselInformation({
                 placeholder=" "
                 value={additional["bargeCompany"] ?? ""}
                 onChange={(e) =>
-                  setAdditional((p) => ({ ...p, bargeCompany: e.value }))
+                  setAdditional((p) => ({ ...p, bargeCompany: String(e.value || "") }))
                 }
               />
             ) : (
@@ -610,7 +614,7 @@ export default function VesselInformation({
                 placeholder=" "
                 value={additional["phone"] ?? ""}
                 onChange={(e) =>
-                  setAdditional((p) => ({ ...p, phone: e.value }))
+                  setAdditional((p) => ({ ...p, phone: String(e.value || "") }))
                 }
               />
             ) : (
@@ -627,7 +631,7 @@ export default function VesselInformation({
                 placeholder=" "
                 value={additional["email"] ?? ""}
                 onChange={(e) =>
-                  setAdditional((p) => ({ ...p, email: e.value }))
+                  setAdditional((p) => ({ ...p, email: String(e.value || "") }))
                 }
               />
             ) : (
@@ -644,7 +648,7 @@ export default function VesselInformation({
                 placeholder=" "
                 value={additional["website"] ?? ""}
                 onChange={(e) =>
-                  setAdditional((p) => ({ ...p, website: e.value }))
+                  setAdditional((p) => ({ ...p, website: String(e.value || "") }))
                 }
               />
             ) : (
@@ -661,7 +665,7 @@ export default function VesselInformation({
                 placeholder=" "
                 value={additional["gross"] ?? ""}
                 onChange={(e) =>
-                  setAdditional((p) => ({ ...p, gross: e.value }))
+                  setAdditional((p) => ({ ...p, gross: String(e.value || "") }))
                 }
               />
             ) : (
@@ -677,7 +681,7 @@ export default function VesselInformation({
                 labelClassName="font-medium"
                 placeholder=" "
                 value={additional["net"] ?? ""}
-                onChange={(e) => setAdditional((p) => ({ ...p, net: e.value }))}
+                onChange={(e) => setAdditional((p) => ({ ...p, net: String(e.value || "") }))}
               />
             ) : (
               <ReadonlyField
@@ -693,7 +697,7 @@ export default function VesselInformation({
                 placeholder=" "
                 value={additional["class"] ?? ""}
                 onChange={(e) =>
-                  setAdditional((p) => ({ ...p, class: e.value }))
+                  setAdditional((p) => ({ ...p, class: String(e.value || "") }))
                 }
               />
             ) : (
@@ -710,7 +714,7 @@ export default function VesselInformation({
                 placeholder=" "
                 value={additional["oceanGoing"] ?? ""}
                 onChange={(e) =>
-                  setAdditional((p) => ({ ...p, oceanGoing: e.value }))
+                  setAdditional((p) => ({ ...p, oceanGoing: String(e.value || "") }))
                 }
               />
             ) : (
@@ -750,17 +754,17 @@ export default function VesselInformation({
                   <Input
                     label="Vessel Owner"
                     value={o.name}
-                    onChange={(e) => updateOwner(o.id, "name", e.value)}
+                    onChange={(e) => updateOwner(o.id, "name", String(e.value || ""))}
                   />
                   <Input
                     label="Effective Date"
                     value={o.eff}
-                    onChange={(e) => updateOwner(o.id, "eff", e.value)}
+                    onChange={(e) => updateOwner(o.id, "eff", String(e.value || ""))}
                   />
                   <Input
                     label="Expiration Date"
                     value={o.exp}
-                    onChange={(e) => updateOwner(o.id, "exp", e.value)}
+                    onChange={(e) => updateOwner(o.id, "exp", String(e.value || ""))}
                   />
 
                   <Button

@@ -6,7 +6,7 @@ import {
 import { faLocationDot } from "@fortawesome/free-solid-svg-icons";
 import { Checkbox, Input } from "@progress/kendo-react-inputs";
 import { Button, ButtonGroup } from "@progress/kendo-react-buttons";
-import { Grid, GridCellProps, GridColumn } from "@progress/kendo-react-grid";
+import { Grid, GridCellProps, GridColumn, GridPageChangeEvent } from "@progress/kendo-react-grid";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenToSquare, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { vessels } from "../../dummyData/VesselsData";
@@ -74,7 +74,7 @@ export default function VesselPage() {
     take: 10,
   });
 
-  const handlePageChange = (e: any) => {
+  const handlePageChange = (e: GridPageChangeEvent) => {
     setPage(e.page);
   };
 
@@ -203,7 +203,7 @@ export default function VesselPage() {
       {/* Table */}
       <div className="border border-gray-300 rounded-lg mt-4 overflow-auto">
         <Grid
-          className="w-[700px] md:w-screen"
+          className="min-w-[700px] w-full"
           data={data?.slice(page.skip, page.skip + page.take)}
           skip={page?.skip}
           take={page?.take}

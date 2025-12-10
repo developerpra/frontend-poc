@@ -5,7 +5,7 @@ export default function ModuleError({
   path,
   onRetry,
 }: {
-  error: any;
+  error: unknown;
   path: string;
   onRetry: () => void;
 }) {

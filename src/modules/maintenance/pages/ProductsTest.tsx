@@ -3,14 +3,20 @@ import { api } from "../../../services/api/apiWrapper";
 import { API_ENDPOINTS } from "../../../services/api/apiEndpoints";
 import Loading from "@/shared/components/Loading";
 
+interface Product {
+  id: number;
+  title: string;
+  body: string;
+}
+
 export default function ProductsTest() {
-  const [products, setProducts] = useState<any[]>([]);
+  const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const load = async () => {
       try {
-        const res = await api.get(API_ENDPOINTS.PRODUCTS);
+        const res = await api.get<Product[]>(API_ENDPOINTS.PRODUCTS);
         setProducts(res);
       } catch (err) {
         console.error("API error:", err);

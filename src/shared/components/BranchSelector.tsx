@@ -1,11 +1,16 @@
 import { useState } from "react";
 import { Dialog, DialogActionsBar } from "@progress/kendo-react-dialogs";
-import { RadioGroup } from "@progress/kendo-react-inputs";
-import { DropDownList } from "@progress/kendo-react-dropdowns";
-import { Checkbox } from "@progress/kendo-react-inputs";
+import { RadioGroup, RadioGroupChangeEvent } from "@progress/kendo-react-inputs";
+import { DropDownList, DropDownListChangeEvent } from "@progress/kendo-react-dropdowns";
+import { Checkbox, CheckboxChangeEvent } from "@progress/kendo-react-inputs";
 import { Button } from "@progress/kendo-react-buttons";
 
-export default function BranchAssignmentDialog({ open, onClose }) {
+interface BranchAssignmentDialogProps {
+  open: boolean;
+  onClose: () => void;
+}
+
+export default function BranchAssignmentDialog({ open, onClose }: BranchAssignmentDialogProps) {
   const options = [
     { label: "All", value: "all" },
     { label: "Regions", value: "regions" },
@@ -34,7 +39,7 @@ export default function BranchAssignmentDialog({ open, onClose }) {
           <RadioGroup
             data={options}
             value={type}
-            onChange={(e) => setType(e.value)}
+            onChange={(e: RadioGroupChangeEvent) => setType(String(e.value))}
             layout="horizontal"
             className="flex space-x-6"
           />
@@ -48,7 +53,7 @@ export default function BranchAssignmentDialog({ open, onClose }) {
               <DropDownList
                 data={type === "individual" ? branches : regions}
                 value={type === "individual" ? branch : region}
-                onChange={(e) =>
+                onChange={(e: DropDownListChangeEvent) =>
                   type === "individual"
                     ? setBranch(e.value)
                     : setRegion(e.value)
@@ -58,7 +63,7 @@ export default function BranchAssignmentDialog({ open, onClose }) {
               <div className="flex gap-2 absolute top-0 right-0">
                 <Checkbox
                   checked={active}
-                  onChange={(e) => setActive(e.value)}
+                  onChange={(e: CheckboxChangeEvent) => setActive(Boolean(e.value))}
                 />
                 <label className="font-semibold">Active</label>
               </div>

@@ -1,4 +1,4 @@
-import { TabStrip, TabStripTab } from "@progress/kendo-react-layout";
+import { TabStrip, TabStripSelectEvent, TabStripTab } from "@progress/kendo-react-layout";
 import { useState } from "react";
 import Vessel from "./Vessel/Vessel";
 import VesselInformation from "./Vessel/Information";
@@ -6,10 +6,14 @@ import Compartments from "./Vessel/Compartments";
 import AuditLog from "./Vessel/AuditLog";
 import { vessel } from "../dummyData/VesselInformation";
 
-export default function VesselTabs({ className }) {
+interface VesselTabsProps {
+  className?: string;
+}
+
+export default function VesselTabs({ className }: VesselTabsProps) {
   const [selected, setSelected] = useState(0);
 
-  const handleSelect = (e) => {
+  const handleSelect = (e: TabStripSelectEvent) => {
     setSelected(e.selected);
   };
 

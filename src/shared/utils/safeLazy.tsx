@@ -24,13 +24,15 @@ export function safeLazy(path: string) {
   return lazy(async () => {
     try {
       return await loader();
-    } catch (error: any) {
+    } catch (error) {
       console.error("MODULE LOAD ERROR:", error);
+
+      const errorMessage = error instanceof Error ? error.message : String(error);
 
       return {
         default: () => (
           <ModuleError
-            error={error?.message || String(error)}
+            error={errorMessage}
             path={path}
             onRetry={() => window.location.reload()}
           />

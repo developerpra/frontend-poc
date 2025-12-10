@@ -8,7 +8,7 @@ import {
   faXmark,
 } from "@fortawesome/free-solid-svg-icons";
 import { Input } from "@progress/kendo-react-inputs";
-import { Grid, GridColumn, GridCellProps } from "@progress/kendo-react-grid";
+import { Grid, GridColumn, GridCellProps, GridPageChangeEvent } from "@progress/kendo-react-grid";
 
 export default function Compartments({
   mode = "edit",
@@ -50,7 +50,7 @@ export default function Compartments({
     },
   ]);
 
-  const handlePageChange = (e: any) => {
+  const handlePageChange = (e: GridPageChangeEvent) => {
     setPage(e.page);
   };
 

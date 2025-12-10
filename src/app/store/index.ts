@@ -1,10 +1,15 @@
 import { configureStore } from "@reduxjs/toolkit";
+import rootReducer from "./rootReducer";
+import { apiSlice } from "../../services/api/apiSlice";
 
-// If you have slices, combine here later.
 export const store = configureStore({
-  reducer: {}, // empty for now
+  reducer: rootReducer,
+  // Adding the api middleware enables caching, invalidation, polling,
+  // and other useful features of `rtk-query`.
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware().concat(apiSlice.middleware),
 });
 
-// Types for useAppSelector/useAppDispatch (optional now)
+// Export types if you need to type your state or dispatch manually
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
