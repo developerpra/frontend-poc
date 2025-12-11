@@ -1,30 +1,29 @@
-import GuardedRoute from "./GuardedRoute";
-import { safeLazy } from "@/shared/utils/safeLazy";
+import { lazy } from "react";
 import NotFound from "@/shared/error/NotFound";
 import { useRoutes } from "react-router-dom";
 
 // Home Landing Page
-const Home = safeLazy("/src/shared/components/Dashboard.tsx");
+const Home = lazy(() => import("@/shared/components/Dashboard"));
 
 // Modules
-const Maintenance = safeLazy("/src/modules/maintenance/pages/Maintenance.tsx");
+const Maintenance = lazy(() => import("@/modules/maintenance/pages/Maintenance"));
 
 // PWA modules
-const Pwa1Home = safeLazy("/src/modules/pwa-module1/pages/Pwa1Home.tsx");
+const Pwa1Home = lazy(() => import("@/modules/pwa-module1/pages/Pwa1Home"));
 
 export default function AppRoutes() {
   return useRoutes([
     {
       path: "/",
-      element: <GuardedRoute element={<Home />} isPwa={false} />,
+      element: <Home />,
     },
     {
       path: "/maintenance",
-      element: <GuardedRoute element={<Maintenance />} isPwa={false} />,
+      element: <Maintenance />,
     },
     {
       path: "/pwa-1",
-      element: <GuardedRoute element={<Pwa1Home />} isPwa={true} />,
+      element: <Pwa1Home />,
     },
     { path: "*", element: <NotFound /> },
   ]);

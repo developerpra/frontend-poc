@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import {
   DropDownList,
   DropDownListChangeEvent,
@@ -13,7 +13,7 @@ import { vessels } from "../../dummyData/VesselsData";
 import VesselBranches from "@/shared/ui/VesselBranches";
 import BranchSelectionModel from "@/shared/ui/BranchSelectionModel";
 
-const [branchSelection, setBranchSelection] = useState(false);
+// Moved inside component: const [branchSelection, setBranchSelection] = useState(false);
 const vesselTypes = ["Barge", "Tow", "Ship"];
 const vesselNames = ["EBL-2869", "EBL-2900", "EBL - 2971 & 2972"];
 const branches = [
@@ -65,10 +65,13 @@ const BranchCell = (props: GridCellProps) => {
 };
 
 export default function VesselPage() {
+  // Fix: Moved useState inside the component
+  const [branchSelection, setBranchSelection] = useState(false);
+
   const [filters, setFilters] = useState({
-    vessel: null,
-    vesselType: null,
-    imo: null,
+    vessel: "",
+    vesselType: "",
+    imo: "",
     branch: "",
     status: "",
   });
@@ -81,6 +84,8 @@ export default function VesselPage() {
     skip: 0,
     take: 10,
   });
+
+  const uniqueBranches = useMemo(() => Array.from(new Set(vessels.map(v => v.branch))), []);
 
   const handlePageChange = (e: GridPageChangeEvent) => {
     setPage(e.page);
@@ -105,7 +110,7 @@ export default function VesselPage() {
 
     if (filters.branch) {
       filtered = filtered.filter((d) =>
-        d.id.toString().includes(filters.branch)
+        d.branch.includes(filters.branch)
       );
     }
 
@@ -118,9 +123,9 @@ export default function VesselPage() {
 
   const clearFilters = () => {
     setFilters({
-      vessel: null,
-      vesselType: null,
-      imo: null,
+      vessel: "",
+      vesselType: "",
+      imo: "",
       branch: "",
       status: "",
     });
@@ -174,7 +179,7 @@ export default function VesselPage() {
             <label className="font-medium">Branch</label>
             <DropDownList
               className=" !bg-transparent"
-              data={vessels?.branch}
+              data={uniqueBranches} // Fix: Used computed unique branches instead of vessels?.branch
               value={filters?.branch}
               onChange={(e: DropDownListChangeEvent) =>
                 setFilters({ ...filters, branch: e.value ?? "" })

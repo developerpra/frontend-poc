@@ -2,6 +2,7 @@ import React, { ErrorInfo } from "react";
 
 interface ErrorBoundaryProps {
   children: React.ReactNode;
+  fallback?: ((props: { error: Error }) => React.ReactNode) | React.ReactNode;
 }
 
 interface ErrorBoundaryState {
@@ -27,7 +28,15 @@ export default class ErrorBoundary extends React.Component<
   }
 
   render() {
-    if (this.state.hasError) {
+    if (this.state.hasError && this.state.error) {
+      if (typeof this.props.fallback === "function") {
+        return this.props.fallback({ error: this.state.error });
+      }
+      
+      if (this.props.fallback) {
+        return this.props.fallback;
+      }
+
       return (
         <div className="p-8 text-center">
           <h1 className="text-2xl font-bold text-red-600">

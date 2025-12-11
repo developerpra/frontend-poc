@@ -7,7 +7,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { useEffect, useRef } from "react";
 import { Input } from "@progress/kendo-react-inputs";
-import map from "lodash-es/map";
+import { map } from "lodash-es";
 
 import { useDispatch } from "react-redux";
 import { toggleMobileSidebar } from "../../app/store/uiSlice";
