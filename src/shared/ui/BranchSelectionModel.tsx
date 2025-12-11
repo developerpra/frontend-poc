@@ -5,12 +5,12 @@ import { DropDownList, DropDownListChangeEvent } from "@progress/kendo-react-dro
 import { Checkbox, CheckboxChangeEvent } from "@progress/kendo-react-inputs";
 import { Button } from "@progress/kendo-react-buttons";
 
-interface BranchAssignmentDialogProps {
+interface BranchSelectionModelProps {
   open: boolean;
   onClose: () => void;
 }
 
-export default function BranchAssignmentDialog({ open, onClose }: BranchAssignmentDialogProps) {
+export default function BranchSelectionModel({ open, onClose }: BranchSelectionModelProps) {
   const options = [
     { label: "All", value: "all" },
     { label: "Regions", value: "regions" },

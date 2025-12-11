@@ -16,7 +16,7 @@ import {
 import { toast } from "sonner";
 import ReadonlyField from "@/shared/ui/ReadOnly";
 import { Grid, GridColumn } from "@progress/kendo-react-grid";
-import BranchAssignmentDialog from "@/shared/components/BranchSelector";
+import BranchSelectionModel from "@/shared/ui/BranchSelectionModel";
 
 type VesselOwner = {
   id: number;
@@ -57,10 +57,10 @@ export default function VesselInformation({
   const [open3, setOpen3] = useState(true);
 
   // Initialize form state from passed data (or defaults)
-  const [branchSelector, setBranchSelector] = useState(false); // Default to false? Original was true.
-  // Original was true for branchSelector: const [branchSelector, setBranchSelector] = useState(true);
+  const [branchSelection, setBranchSelection] = useState(false); // Default to false? Original was true.
+  // Original was true for branchSelection: const [branchSelection, setBranchSelection] = useState(true);
   // I will keep it as is, but usually dialogs start closed? 
-  // Wait, looking at the code: <BranchAssignmentDialog open={branchSelector} ... />
+  // Wait, looking at the code: <BranchSelectionModel open={branchSelection} ... />
   // If it's true, it opens on load. I'll stick to original behavior unless it looks like a bug.
   
   const [vesselName, setVesselName] = useState<string>(data?.vesselName ?? "");
@@ -100,7 +100,7 @@ export default function VesselInformation({
   const [notes, setNotes] = useState<string>(data?.notes ?? "");
 
   const toggleDialog = () => {
-    setBranchSelector(!branchSelector);
+    setBranchSelection(!branchSelection);
   };
 
   // Keep local state in sync if parent data changes
@@ -821,10 +821,10 @@ export default function VesselInformation({
       )}
 
       {/* Model */}
-      {branchSelector && (
-        <BranchAssignmentDialog
-          open={branchSelector}
-          onClose={() => setBranchSelector(false)}
+      {branchSelection && (
+        <BranchSelectionModel
+          open={branchSelection}
+          onClose={() => setBranchSelection(false)}
         />
       )}
     </>

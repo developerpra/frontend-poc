@@ -10,16 +10,29 @@ import { Grid, GridCellProps, GridColumn, GridPageChangeEvent } from "@progress/
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenToSquare, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { vessels } from "../../dummyData/VesselsData";
+import VesselBranches from "@/shared/ui/VesselBranches";
+import BranchSelectionModel from "@/shared/ui/BranchSelectionModel";
 
+const [branchSelection, setBranchSelection] = useState(false);
 const vesselTypes = ["Barge", "Tow", "Ship"];
 const vesselNames = ["EBL-2869", "EBL-2900", "EBL - 2971 & 2972"];
-
+const branches = [
+  {
+    group: "US - East Coast",
+    items: ["Linden", "New Haven"],
+  },
+  {
+    group: "US - Gulf Coast Central",
+    items: ["Corpus Christi"],
+  },
+];
 const ActionCell = (_props: GridCellProps) => (
   <td>
     <div className="flex items-center justify-center gap-3 text-lg">
       <button
         type="button"
         title="Edit"
+        // onClick={}
         className="text-primary cursor-pointer"
       >
         <FontAwesomeIcon icon={faLocationDot} className="text-primary" />
@@ -45,13 +58,8 @@ const ActionCell = (_props: GridCellProps) => (
 
 const BranchCell = (props: GridCellProps) => {
   return (
-    <td className="flex items-center gap-2 px-2">
-      <a
-        href={`/branch/${props.dataItem.branch}`}
-        className="text-primary underline hover:text-blue-800"
-      >
-        {props.dataItem.branch}
-      </a>
+    <td>
+      <VesselBranches data={branches} />
     </td>
   );
 };
@@ -238,6 +246,14 @@ export default function VesselPage() {
           />
         </Grid>
       </div>
+
+      {/* Model */}
+      {branchSelection && (
+        <BranchSelectionModel
+          open={branchSelection}
+          onClose={() => setBranchSelection(false)}
+        />
+      )}
     </>
   );
 }
