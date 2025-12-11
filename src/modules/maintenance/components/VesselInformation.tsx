@@ -1,42 +1,47 @@
-import { TabStrip, TabStripSelectEvent, TabStripTab } from "@progress/kendo-react-layout";
-import { useState } from "react";
+import { TabStrip, TabStripTab } from "@progress/kendo-react-layout";
 import Vessel from "./Vessel/Vessel";
 import VesselInformation from "./Vessel/Information";
 import Compartments from "./Vessel/Compartments";
 import AuditLog from "./Vessel/AuditLog";
-import { vessel } from "../dummyData/VesselInformation";
 
 interface VesselTabsProps {
   className?: string;
+  selected: number;
+  onSelect: (e: any) => void;
+  selectedVesselData: any;
+  onEditVessel: (vesselData: any) => void;
+  onViewVessel: (vesselData: any) => void;
+  mode?: "edit" | "view";
 }
 
-export default function VesselTabs({ className }: VesselTabsProps) {
-  const [selected, setSelected] = useState(0);
-
-  const handleSelect = (e: TabStripSelectEvent) => {
-    setSelected(e.selected);
-  };
-
+export default function VesselTabs({ 
+  className, 
+  selected, 
+  onSelect, 
+  selectedVesselData,
+  onEditVessel,
+  onViewVessel,
+  mode = "edit"
+}: VesselTabsProps) {
+  
   return (
     <TabStrip
-      // selected={2}
       selected={selected}
-      onSelect={handleSelect}
+      onSelect={onSelect}
       scrollable={true}
       size="large"
       className={`w-full ${className}`}
     >
       <TabStripTab title="Vessel">
-        <Vessel />
+        <Vessel onEdit={onEditVessel} onView={onViewVessel} />
       </TabStripTab>
 
       <TabStripTab title="Vessel Information">
-        {/* <VesselInformation mode="edit" /> */}
-        <VesselInformation mode="edit" data={vessel} />
+        <VesselInformation mode={mode} data={selectedVesselData} />
       </TabStripTab>
 
       <TabStripTab title="Vessel Compartments">
-        <Compartments mode="edit" />
+        <Compartments mode={mode} />
       </TabStripTab>
 
       <TabStripTab title="Audit Log">

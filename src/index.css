@@ -139,3 +139,15 @@ label {
 .k-grid-header th {
   @apply !font-bold;
 }
+
+/* Remove default alternating row background */
+.k-grid .k-table-row.k-table-alt-row {
+  background-color: transparent !important;
+}
+
+/* Styling for Inactive Rows in Kendo Grid */
+.k-grid tr.k-row-inactive,
+.k-grid tr.k-row-inactive > td {
+  background-color: #f3f4f6 !important; /* gray-100 */
+  color: #6b7280; /* gray-500 */
+}

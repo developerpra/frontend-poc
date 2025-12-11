@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Button, ButtonGroup } from "@progress/kendo-react-buttons";
+import { Button ,ButtonGroup } from "@progress/kendo-react-buttons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faFile,
@@ -7,7 +7,7 @@ import {
   faTrash,
   faXmark,
 } from "@fortawesome/free-solid-svg-icons";
-import { Input } from "@progress/kendo-react-inputs";
+import { Input, RadioGroup, RadioGroupChangeEvent } from "@progress/kendo-react-inputs";
 import { Grid, GridColumn, GridCellProps, GridPageChangeEvent } from "@progress/kendo-react-grid";
 
 export default function Compartments({
@@ -19,6 +19,8 @@ export default function Compartments({
     skip: 0,
     take: 10,
   });
+
+  const [compartmentType, setCompartmentType] = useState("Blank");
 
   const [rows, setRows] = useState([
     {
@@ -141,65 +143,68 @@ export default function Compartments({
     <>
       {/* TOP FILTER SECTION */}
       {mode === "edit" && (
-        <div className="flex justify-between border border-gray-300 rounded-lg p-4 my-6">
-          <div>
-            <h3 className="font-bold text-gray-700">Compartment Type</h3>
-            <ButtonGroup>
-              <Button togglable selected className="w-22">
-                Blank
-              </Button>
-              <Button togglable className="w-22">
-                P,S Series
-              </Button>
-              <Button togglable className="w-22">
-                P,S,C Series
-              </Button>
-            </ButtonGroup>
-          </div>
+        <div className="border border-gray-300 rounded-lg p-4 my-6">
+          <div className="flex flex-col lg:flex-row lg:justify-between lg:items-start gap-4 lg:gap-6">
+            <div className="w-full lg:w-auto">
+              <h3 className="font-bold text-gray-700 mb-2">Compartment Type</h3>
+              <RadioGroup
+                data={[
+                  { label: "Blank", value: "Blank" },
+                  { label: "P,S Series", value: "P,S Series" },
+                  { label: "P,S,C Series", value: "P,S,C Series" },
+                ]}
+                value={compartmentType}
+                onChange={(e: RadioGroupChangeEvent) => setCompartmentType(String(e.value))}
+                layout="horizontal"
+                className="flex space-x-6"
+              />
+            </div>
 
-          <Input
-            label="Number of Compt."
-            
-            placeholder=" "
-            className=""
-          />
-          <Input
-            label="Starting Compt. #"
-            
-            placeholder=" "
-            className=""
-          />
+            <div className="w-full lg:w-auto flex flex-col sm:flex-row gap-4">
+              <Input
+                label="Number of Compt."
+                placeholder=" "
+                className="w-full sm:w-auto"
+              />
+              <Input
+                label="Starting Compt. #"
+                placeholder=" "
+                className="w-full sm:w-auto"
+              />
+            </div>
 
-          <div>
-            <h3 className="font-bold text-gray-700">Include Slops Compt.</h3>
-            <ButtonGroup>
-              <Button togglable selected className="w-16">
-                Yes
-              </Button>
-              <Button togglable className="w-16">
-                No
-              </Button>
-            </ButtonGroup>
-          </div>
+            <div className="w-full lg:w-auto">
+              <h3 className="font-bold text-gray-700 mb-2">Include Slops Compt.</h3>
+              <ButtonGroup>
+                <Button togglable selected className="w-16">
+                  Yes
+                </Button>
+                <Button togglable className="w-16">
+                  No
+                </Button>
+              </ButtonGroup>
+            </div>
 
-          <div className="flex gap-4 mt-4">
-            <Button
-              themeColor="primary"
-              className="w-20"
-              onClick={handleAddRow}
-            >
-              <FontAwesomeIcon icon={faPlus} className="mr-1" /> Add
-            </Button>
-            <Button className="w-20" onClick={handleDelete}>
-              <FontAwesomeIcon icon={faTrash} className="mr-1" /> Delete
-            </Button>
+            <div className="flex flex-col sm:flex-row gap-4 w-full lg:w-auto lg:mt-0">
+              <Button
+                themeColor="primary"
+                className="w-full sm:w-auto"
+                onClick={handleAddRow}
+              >
+                <FontAwesomeIcon icon={faPlus} className="mr-1" /> Add
+              </Button>
+              <Button className="w-full sm:w-auto" onClick={handleDelete}>
+                <FontAwesomeIcon icon={faTrash} className="mr-1" /> Delete
+              </Button>
+            </div>
           </div>
         </div>
       )}
 
       {/* GRID TABLE */}
-      <div className="border border-gray-300 rounded-lg bg-white mt-4">
+      <div className="border border-gray-300 rounded-lg bg-white mt-4 overflow-x-auto">
         <Grid
+          className="min-w-[700px] w-full"
           data={rows.slice(page.skip, page.skip + page.take)}
           skip={page.skip}
           take={page.take}
@@ -277,11 +282,11 @@ export default function Compartments({
 
       {/* SAVE/CANCEL */}
       {mode === "edit" && (
-        <div className="flex justify-end gap-4 my-6">
-          <Button themeColor="primary" onClick={handleSave}>
+        <div className="flex flex-col sm:flex-row justify-end gap-4 my-6">
+          <Button themeColor="primary" onClick={handleSave} className="w-full sm:w-auto">
             <FontAwesomeIcon icon={faFile} className="mr-1" /> Save
           </Button>
-          <Button onClick={handleCancel}>
+          <Button onClick={handleCancel} className="w-full sm:w-auto">
             <FontAwesomeIcon icon={faXmark} className="mr-1" /> Cancel
           </Button>
         </div>

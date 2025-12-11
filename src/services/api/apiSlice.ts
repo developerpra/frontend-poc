@@ -32,10 +32,18 @@ export const apiSlice = createApi({
       }),
       invalidatesTags: (result, error, { id }) => [{ type: 'Vessel', id }],
     }),
+    // Example mutation: Create a vessel
+    createVessel: builder.mutation<any, any>({
+      query: (data) => ({
+        url: '/vessels',
+        method: 'POST',
+        body: data,
+      }),
+      invalidatesTags: ['Vessel'],
+    }),
   }),
 });
 
 // Export hooks for usage in functional components, which are
 // auto-generated based on the defined endpoints
-export const { useGetVesselQuery, useUpdateVesselMutation } = apiSlice;
-
+export const { useGetVesselQuery, useUpdateVesselMutation, useCreateVesselMutation } = apiSlice;

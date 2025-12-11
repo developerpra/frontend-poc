@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import React, { useState, useMemo } from "react";
 import {
   DropDownList,
   DropDownListChangeEvent,
@@ -6,14 +6,13 @@ import {
 import { faLocationDot } from "@fortawesome/free-solid-svg-icons";
 import { Checkbox, Input } from "@progress/kendo-react-inputs";
 import { Button, ButtonGroup } from "@progress/kendo-react-buttons";
-import { Grid, GridCellProps, GridColumn, GridPageChangeEvent } from "@progress/kendo-react-grid";
+import { Grid, GridCellProps, GridColumn, GridPageChangeEvent, GridRowProps, GridRowClickEvent } from "@progress/kendo-react-grid";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenToSquare, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { vessels } from "../../dummyData/VesselsData";
 import VesselBranches from "@/shared/ui/VesselBranches";
 import BranchSelectionModel from "@/shared/ui/BranchSelectionModel";
 
-// Moved inside component: const [branchSelection, setBranchSelection] = useState(false);
 const vesselTypes = ["Barge", "Tow", "Ship"];
 const vesselNames = ["EBL-2869", "EBL-2900", "EBL - 2971 & 2972"];
 const branches = [
@@ -26,35 +25,6 @@ const branches = [
     items: ["Corpus Christi"],
   },
 ];
-const ActionCell = (_props: GridCellProps) => (
-  <td>
-    <div className="flex items-center justify-center gap-3 text-lg">
-      <button
-        type="button"
-        title="Edit"
-        // onClick={}
-        className="text-primary cursor-pointer"
-      >
-        <FontAwesomeIcon icon={faLocationDot} className="text-primary" />
-      </button>
-
-      <button
-        type="button"
-        title="Edit"
-        className="text-primary cursor-pointer"
-      >
-        <FontAwesomeIcon icon={faPenToSquare} />
-      </button>
-      <button
-        type="button"
-        title="Delete"
-        className="text-primary cursor-pointer"
-      >
-        <FontAwesomeIcon icon={faTrash} />
-      </button>
-    </div>
-  </td>
-);
 
 const BranchCell = (props: GridCellProps) => {
   return (
@@ -64,8 +34,12 @@ const BranchCell = (props: GridCellProps) => {
   );
 };
 
-export default function VesselPage() {
-  // Fix: Moved useState inside the component
+interface VesselPageProps {
+  onEdit?: (data: any) => void;
+  onView?: (data: any) => void;
+}
+
+export default function VesselPage({ onEdit, onView }: VesselPageProps) {
   const [branchSelection, setBranchSelection] = useState(false);
 
   const [filters, setFilters] = useState({
@@ -131,6 +105,58 @@ export default function VesselPage() {
     });
     setStatus("Active");
     setData(vessels);
+  };
+
+  const ActionCell = (props: GridCellProps) => (
+    <td>
+      <div className="flex items-center justify-center gap-3 text-lg">
+        <button
+          type="button"
+          title="Edit"
+          onClick={(e) => {
+            e.stopPropagation(); // Prevent row click
+            onEdit?.(props.dataItem);
+          }}
+          className="text-primary cursor-pointer"
+        >
+          <FontAwesomeIcon icon={faLocationDot} className="text-primary" />
+        </button>
+  
+        <button
+          type="button"
+          title="Edit"
+          onClick={(e) => {
+            e.stopPropagation(); // Prevent row click
+            onEdit?.(props.dataItem);
+          }}
+          className="text-primary cursor-pointer"
+        >
+          <FontAwesomeIcon icon={faPenToSquare} />
+        </button>
+        <button
+          type="button"
+          title="Delete"
+          className="text-primary cursor-pointer"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <FontAwesomeIcon icon={faTrash} />
+        </button>
+      </div>
+    </td>
+  );
+
+  const rowRender = (trElement: React.ReactElement<HTMLTableRowElement>, props: GridRowProps) => {
+    const isInactive = props.dataItem.status === "Inactive";
+    const trProps = {
+      ...trElement.props,
+      className: `${trElement.props.className || ""} ${isInactive ? "!bg-gray-100 !text-gray-400" : ""} cursor-pointer hover:bg-gray-50`,
+      onClick: (e: React.MouseEvent) => {
+        // @ts-expect-error onClick might not be in the type definition but exists on props
+        if (trElement.props.onClick) trElement.props.onClick(e);
+        onView?.(props.dataItem);
+      }
+    };
+    return React.cloneElement(trElement, { ...trProps }, trElement.props.children);
   };
 
   return (
@@ -226,6 +252,8 @@ export default function VesselPage() {
             buttonCount: 5,
           }}
           onPageChange={handlePageChange}
+          // @ts-expect-error rowRender is valid but might be missing in types
+          rowRender={rowRender}
         >
           <GridColumn
             className="col-vessel"

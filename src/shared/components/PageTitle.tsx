@@ -7,7 +7,12 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { Button } from "@progress/kendo-react-buttons";
 
-export default function PageTitle({ text }: { text: string }) {
+interface PageTitleProps {
+  text: string;
+  onAdd?: () => void;
+}
+
+export default function PageTitle({ text, onAdd }: PageTitleProps) {
   const [fav, setFav] = useState(false);
 
   return (
@@ -24,7 +29,7 @@ export default function PageTitle({ text }: { text: string }) {
         <Button fillMode="flat" themeColor="primary">
           Reference
         </Button>
-        <Button themeColor="primary" className="w-16">
+        <Button themeColor="primary" className="w-16" onClick={onAdd}>
           <FontAwesomeIcon icon={faPlus} className="mr-1" />
           Add
         </Button>
