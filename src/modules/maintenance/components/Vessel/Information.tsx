@@ -127,6 +127,14 @@ export default function VesselInformation({
   }, [data]);
 
   const vesselTypeOptions = ["Barge", "Tow", "Ship"];
+  const volumeUnitOptions = ["BBL", "USG", "Liters", "Cubic Meters", "Barrels"];
+  const gaugeUnitOptions = ["IN", "CM", "MM", "FT"];
+  const draftUnitOptions = ["FT", "M", "CM"];
+  const vetUnitsOptions = ["USG", "BBL", "Liters", "Cubic Meters"];
+  const connectionTypeOptions = ["Flange", "Quick Connect", "Threaded", "Welded", "Other"];
+  const sandPipeOptions = ["Yes", "No"];
+  const bargeCompanyOptions = ["Marine LLC", "Ocean Transport Co", "Harbor Services", "Coastal Shipping", "Other"];
+  const ballastOptions = ["Yes", "No"];
 
   // OWNERS HANDLERS
   const addOwner = () => {
@@ -312,50 +320,62 @@ export default function VesselInformation({
             )}
 
             {mode === "edit" ? (
-              <>
-                <label>volume Unit</label>
+              <div className="space-y-1">
+                <label>Volume Unit</label>
                 <DropDownList
                   className="!bg-transparent"
                   value={volumeUnit}
                   placeholder="Select Volume Unit"
-                  data={["Barrels", "Cubic Meters", "Liters"]}
+                  data={volumeUnitOptions}
                   onChange={(e) => setVolumeUnit(String(e.value || ""))}
                 />
-             </>
+              </div>
             ) : (
               <ReadonlyField label="Volume Unit" value={volumeUnit} />
             )}
 
-             {mode === "edit" ? (
-              <Input
-                label="Gauge Unit"
-                value={gaugeUnit}
-                placeholder=" "
-                onChange={(e) => setGaugeUnit(String(e.value || ""))}
-              />
+            {mode === "edit" ? (
+              <div className="space-y-1">
+                <label>Gauge Unit</label>
+                <DropDownList
+                  className="!bg-transparent"
+                  placeholder="Select Gauge Unit"
+                  data={gaugeUnitOptions}
+                  value={gaugeUnit}
+                  onChange={(e) => setGaugeUnit(String(e.value || ""))}
+                />
+              </div>
             ) : (
               <ReadonlyField label="Gauge Unit" value={gaugeUnit} />
             )}
 
-             {mode === "edit" ? (
-              <Input
-                label="Draft Unit"
-                value={draftUnit}
-                placeholder=" "
-                onChange={(e) => setDraftUnit(String(e.value || ""))}
-              />
+            {mode === "edit" ? (
+              <div className="space-y-1">
+                <label>Draft Unit</label>
+                <DropDownList
+                  className="!bg-transparent"
+                  placeholder="Select Draft Unit"
+                  data={draftUnitOptions}
+                  value={draftUnit}
+                  onChange={(e) => setDraftUnit(String(e.value || ""))}
+                />
+              </div>
             ) : (
               <ReadonlyField label="Draft Unit" value={draftUnit} />
             )}
 
             {/* VEF Units */}
             {mode === "edit" ? (
-              <Input
-                label="VEF Units"
-                value={vetUnits}
-                placeholder=" "
-                onChange={(e) => setVetUnits(String(e.value || ""))}
-              />
+              <div className="space-y-1">
+                <label>VEF Units</label>
+                <DropDownList
+                  className="!bg-transparent"
+                  placeholder="Select VEF Units"
+                  data={vetUnitsOptions}
+                  value={vetUnits}
+                  onChange={(e) => setVetUnits(String(e.value || ""))}
+                />
+              </div>
             ) : (
               <ReadonlyField label="VEF Units" value={vetUnits} />
             )}
@@ -372,15 +392,18 @@ export default function VesselInformation({
             )}
 
             {mode === "edit" ? (
-              <Input
-                label="Vessel Connection Type"
-                
-                placeholder=" "
-                value={additional["connectionType"] ?? ""}
-                onChange={(e) =>
-                  setAdditional((p) => ({ ...p, connectionType: String(e.value || "") }))
-                }
-              />
+              <div className="space-y-1">
+                <label>Vessel Connection Type</label>
+                <DropDownList
+                  className="!bg-transparent"
+                  placeholder="Select Connection Type"
+                  data={connectionTypeOptions}
+                  value={additional["connectionType"] ?? ""}
+                  onChange={(e) =>
+                    setAdditional((p) => ({ ...p, connectionType: String(e.value || "") }))
+                  }
+                />
+              </div>
             ) : (
               <ReadonlyField
                 label="Vessel Connection Type"
@@ -389,12 +412,16 @@ export default function VesselInformation({
             )}
 
             {mode === "edit" ? (
-              <Input
-                label="Sand Pipe"
-                value={sandPipe}
-                placeholder=" "
-                onChange={(e) => setSandPipe(String(e.value || ""))}
-              />
+              <div className="space-y-1">
+                <label>Sand Pipe</label>
+                <DropDownList
+                  className="!bg-transparent"
+                  placeholder="Select Sand Pipe"
+                  data={sandPipeOptions}
+                  value={sandPipe}
+                  onChange={(e) => setSandPipe(String(e.value || ""))}
+                />
+              </div>
             ) : (
               <ReadonlyField label="Sand Pipe" value={sandPipe} />
             )}
@@ -417,13 +444,15 @@ export default function VesselInformation({
             )}
 
             {mode === "edit" ? (
-              <Input
+              <DatePicker
                 label="Last Dry Dock"
-                
-                placeholder=" "
-                value={additional["lastDryDock"] ?? ""}
+                placeholder="Choose a date..."
+                value={additional["lastDryDock"] ? new Date(additional["lastDryDock"]) : null}
                 onChange={(e) =>
-                  setAdditional((p) => ({ ...p, lastDryDock: String(e.value || "") }))
+                  setAdditional((p) => ({ 
+                    ...p, 
+                    lastDryDock: e.value ? e.value.toISOString().split('T')[0] : "" 
+                  }))
                 }
               />
             ) : (
@@ -434,13 +463,15 @@ export default function VesselInformation({
             )}
 
             {mode === "edit" ? (
-              <Input
+              <DatePicker
                 label="Last Strapping"
-                
-                placeholder=" "
-                value={additional["lastSampling"] ?? ""}
+                placeholder="Choose a date..."
+                value={additional["lastSampling"] ? new Date(additional["lastSampling"]) : null}
                 onChange={(e) =>
-                  setAdditional((p) => ({ ...p, lastSampling: String(e.value || "") }))
+                  setAdditional((p) => ({ 
+                    ...p, 
+                    lastSampling: e.value ? e.value.toISOString().split('T')[0] : "" 
+                  }))
                 }
               />
             ) : (
@@ -484,15 +515,18 @@ export default function VesselInformation({
         {open2 && (
           <div className="p-4 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {mode === "edit" ? (
-              <Input
-                label="Barge Company"
-                
-                placeholder=" "
-                value={additional["bargeCompany"] ?? ""}
-                onChange={(e) =>
-                  setAdditional((p) => ({ ...p, bargeCompany: String(e.value || "") }))
-                }
-              />
+              <div className="space-y-1">
+                <label>Barge Company</label>
+                <DropDownList
+                  className="!bg-transparent"
+                  placeholder="Select Barge Company"
+                  data={bargeCompanyOptions}
+                  value={additional["bargeCompany"] ?? ""}
+                  onChange={(e) =>
+                    setAdditional((p) => ({ ...p, bargeCompany: String(e.value || "") }))
+                  }
+                />
+              </div>
             ) : (
               <ReadonlyField
                 label="Barge Company"
@@ -666,15 +700,18 @@ export default function VesselInformation({
             )}
 
             {mode === "edit" ? (
-              <Input
-                label="Ballast"
-                
-                placeholder=" "
-                value={additional["ballast"] ?? ""}
-                onChange={(e) =>
-                  setAdditional((p) => ({ ...p, ballast: String(e.value || "") }))
-                }
-              />
+              <div className="space-y-1">
+                <label>Ballast</label>
+                <DropDownList
+                  className="!bg-transparent"
+                  placeholder="Select Ballast"
+                  data={ballastOptions}
+                  value={additional["ballast"] ?? ""}
+                  onChange={(e) =>
+                    setAdditional((p) => ({ ...p, ballast: String(e.value || "") }))
+                  }
+                />
+              </div>
             ) : (
               <ReadonlyField
                 label="Ballast"
