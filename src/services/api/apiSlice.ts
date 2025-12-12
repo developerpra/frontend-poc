@@ -95,33 +95,71 @@ export const apiSlice = createApi({
   endpoints: (builder) => ({
     // Get a vessel list
     getVesselList: builder.query<ApiResponse<VesselListResponse>, VesselListParams>({
-      query: (params) => ({
-        url: '/VesselInformation',
-        params,
-      }),
+      query: (params) => {
+        const queryString = params ? '?' + new URLSearchParams(params as any).toString() : '';
+        const fullUrl = `${BASE_URL}/VesselInformation${queryString}`;
+        console.log('🔵 GET API Call - Vessel List:', {
+          url: fullUrl,
+          method: 'GET',
+          params,
+          timestamp: new Date().toISOString(),
+        });
+        return {
+          url: '/VesselInformation',
+          params,
+        };
+      },
       providesTags: ['Vessel'],
     }),
     // Get a vessel by ID
     getVesselInformation: builder.query<ApiResponse<VesselData>, number | string>({
-      query: (id) => `/VesselInformation/${id}`, 
+      query: (id) => {
+        const fullUrl = `${BASE_URL}/VesselInformation/${id}`;
+        console.log('🔵 GET API Call - Vessel Information:', {
+          url: fullUrl,
+          method: 'GET',
+          vesselId: id,
+          timestamp: new Date().toISOString(),
+        });
+        return `/VesselInformation/${id}`;
+      },
       providesTags: (result, error, id) => [{ type: 'Vessel', id }],
     }),
     // mutation: Update a vessel
     updateVessel: builder.mutation<any, { id: string | number; data: any }>({
-      query: ({ id, data }) => ({
-        url: `/VesselInformation/${id}`,
-        method: 'PUT',
-        body: data,
-      }),
+      query: ({ id, data }) => {
+        const fullUrl = `${BASE_URL}/VesselInformation/${id}`;
+        console.log('🟢 PUT API Call - Update Vessel:', {
+          url: fullUrl,
+          method: 'PUT',
+          vesselId: id,
+          body: JSON.stringify(data, null, 2),
+          timestamp: new Date().toISOString(),
+        });
+        return {
+          url: `/VesselInformation/${id}`,
+          method: 'PUT',
+          body: data,
+        };
+      },
       invalidatesTags: (result, error, { id }) => [{ type: 'Vessel', id }],
     }),
     // mutation: Create a vessel
     createVessel: builder.mutation<any, any>({
-      query: (data) => ({
-        url: '/VesselInformation',
-        method: 'POST',
-        body: data,
-      }),
+      query: (data) => {
+        const fullUrl = `${BASE_URL}/VesselInformation`;
+        console.log('🟢 POST API Call - Create Vessel:', {
+          url: fullUrl,
+          method: 'POST',
+          body: JSON.stringify(data, null, 2),
+          timestamp: new Date().toISOString(),
+        });
+        return {
+          url: '/VesselInformation',
+          method: 'POST',
+          body: data,
+        };
+      },
       invalidatesTags: ['Vessel'],
     }),
   }),

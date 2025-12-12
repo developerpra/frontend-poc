@@ -119,7 +119,7 @@ export default function VesselPage({ onEdit, onView }: VesselPageProps) {
           type="button"
           title="Edit"
           onClick={(e) => {
-            e.stopPropagation(); // Prevent row click
+            e.stopPropagation(); 
             onEdit?.({ ...props.dataItem, id: props.dataItem.vesselId });
           }}
           className="text-primary cursor-pointer"
